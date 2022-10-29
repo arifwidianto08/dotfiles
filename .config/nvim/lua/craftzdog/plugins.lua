@@ -16,6 +16,26 @@ end
 
 local packer_bootstrap = ensure_packer() -- true if packer was just installed
 
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+
+  --Enable completion triggered by <c-x><c-o>
+  --local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+  --buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap = true, silent = true }
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  --buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  --buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+end
+
+
 -- autocommand that reloads neovim and installs/updates/removes plugins
 -- when file is saved
 vim.cmd([[ 
@@ -92,6 +112,7 @@ packer.startup(function(use)
       require('Comment').setup()
     end
   }
+  use 'jose-elias-alvarez/typescript.nvim' -- Typescript
   -- use 'github/copilot.vim'
 
   use 'dinhhuy258/git.nvim' -- For git blame & browse
@@ -170,38 +191,76 @@ packer.startup(function(use)
 
     -- require('nvim-comment').setup({ comment_empty = false, })
 
-    require 'nvim-treesitter.configs'.setup {
-      context_commentstring = {
-        enable = true,
-        config = {
-          javascript = {
-            __default = '// %s',
-            jsx_element = '{/* %s */}',
-            jsx_fragment = '{/* %s */}',
-            jsx_attribute = '// %s',
-            comment = '// %s'
-          }
-        }
-      }
-    }
 
     require('better-comment').Setup()
 
     require("indent_blankline").setup {
-      -- for example, context is off by default, use this to turn it on
       space_char_blankline = " ",
+      buftype_exclude = { "terminal" },
+      filetype_exclude = { "dashboard", "NvimTree", "packer", "lsp-installer" },
       show_current_context = true,
       show_current_context_start = true,
-      show_end_of_line = true,
-      char_highlight_list = {
-        "IndentBlanklineIndent1",
-        "IndentBlanklineIndent2",
-        "IndentBlanklineIndent3",
-        "IndentBlanklineIndent4",
-        "IndentBlanklineIndent5",
-        "IndentBlanklineIndent6",
+      context_patterns = {
+        "class", "return", "function", "method", "^if", "^while", "jsx_element", "^for", "^object",
+        "^table", "block", "arguments", "if_statement", "else_clause", "tsx_element",
+        "jsx_self_closing_element", "tsx_self_closing_element", "try_statement", "catch_clause", "import_statement",
+        "operation_type"
       }
     }
+
+
+    require("typescript").setup({
+      disable_commands = false, -- prevent the plugin from creating Vim commands
+      debug = false, -- enable debug logging for commands
+      go_to_source_definition = {
+        fallback = true, -- fall back to standard LSP definition on failure
+      },
+      server = { -- pass options to lspconfig's setup method
+        on_attach = on_attach
+      },
+    })
+
+    require('gitsigns').setup({
+      signs                        = {
+        add          = { hl = 'GitSignsAdd', text = '│', numhl = 'GitSignsAddNr', linehl = 'GitSignsAddLn' },
+        change       = { hl = 'GitSignsChange', text = '│', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
+        delete       = { hl = 'GitSignsDelete', text = '_', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
+        topdelete    = { hl = 'GitSignsDelete', text = '‾', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
+        changedelete = { hl = 'GitSignsChange', text = '~', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
+      },
+      signcolumn                   = true, -- Toggle with `:Gitsigns toggle_signs`
+      numhl                        = false, -- Toggle with `:Gitsigns toggle_numhl`
+      linehl                       = false, -- Toggle with `:Gitsigns toggle_linehl`
+      word_diff                    = false, -- Toggle with `:Gitsigns toggle_word_diff`
+      watch_gitdir                 = {
+        interval = 1000,
+        follow_files = true
+      },
+      attach_to_untracked          = true,
+      current_line_blame           = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
+      current_line_blame_opts      = {
+        virt_text = true,
+        virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+        delay = 1000,
+        ignore_whitespace = false,
+      },
+      current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+      sign_priority                = 6,
+      update_debounce              = 100,
+      status_formatter             = nil, -- Use default
+      max_file_length              = 40000, -- Disable if file is longer than this (in lines)
+      preview_config               = {
+        -- Options passed to nvim_open_win
+        border = 'single',
+        style = 'minimal',
+        relative = 'cursor',
+        row = 0,
+        col = 1
+      },
+      yadm                         = {
+        enable = false
+      },
+    })
 
   end
 

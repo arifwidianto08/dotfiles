@@ -64,9 +64,13 @@ keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 -- Move text up and down
 keymap.set("v", "<A-j>", ":m .+1<CR>==", opts)
 keymap.set("v", "<A-k>", ":m .-2<CR>==", opts)
+keymap.set("n", "<A-j>", ":m .+1<CR>==", opts)
+keymap.set("n", "<A-k>", ":m .-2<CR>==", opts)
 keymap.set("v", "p", '"_dP', opts)
-keymap.set("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
-keymap.set("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
+keymap.set("x", "<A-j>", ":m '>+1<CR>gv=gv", opts)
+keymap.set("x", "<A-k>", ":m '<-2<CR>gv=gv", opts)
+keymap.set("i", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
+keymap.set("i", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 
 -- Save File
 keymap.set("n", "<C-s>", ":w<CR><ESC>")
@@ -99,8 +103,14 @@ keymap.set("n", "<leader>ph", function() return function()
   end
 end
 )
+
 keymap.set("n", "<leader>gb", function() return function()
     require("gitsigns").blame_line()
+  end
+end
+)
+keymap.set("n", "<leader>gl", function() return function()
+    require("gitsigns").toggle_current_line_blame()
   end
 end
 )

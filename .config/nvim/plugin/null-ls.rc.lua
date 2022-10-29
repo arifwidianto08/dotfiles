@@ -14,16 +14,24 @@ end
 
 null_ls.setup {
   sources = {
-    null_ls.builtins.formatting.prettierd,
+    null_ls.builtins.formatting.prettierd.with({ filetypes = { "css", "scss", "less", "html", "json", "yaml", "markdown",
+      "graphql", "javascript",
+      "javascriptreact", "typescript", "typescriptreact", "css", "json", "jsonc", "json5", "vue" }, }),
     null_ls.builtins.formatting.prettier.with({
       -- extra_args = { "--single-quote", "--print-width 120" },
       filetypes = { "css", "scss", "less", "html", "json", "yaml", "markdown", "graphql", "javascript",
         "javascriptreact", "typescript", "typescriptreact", "css", "json", "jsonc", "json5", "vue" },
     }),
-    null_ls.builtins.diagnostics.eslint_d.with({
-      diagnostics_format = '[eslint] #{m}\n(#{c})'
-    }),
-    null_ls.builtins.diagnostics.fish
+    -- null_ls.builtins.diagnostics.eslint_d.with({
+    --   diagnostics_format = '[eslint] #{m}\n(#{c})'
+    -- }),
+    null_ls.builtins.diagnostics.eslint_d,
+    -- null_ls.builtins.diagnostics.fish,
+    null_ls.builtins.completion.luasnip,
+    null_ls.builtins.completion.spell,
+    null_ls.builtins.diagnostics.cspell,
+    null_ls.builtins.code_actions.cspell,
+    null_ls.builtins.hover.dictionary
   },
   on_attach = function(client, bufnr)
     if client.supports_method("textDocument/formatting") then

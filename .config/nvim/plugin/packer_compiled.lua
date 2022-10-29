@@ -120,11 +120,6 @@ _G.packer_plugins = {
     path = "/Users/arifwidianto/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
     url = "https://github.com/lewis6991/gitsigns.nvim"
   },
-  ["indent-blankline.nvim"] = {
-    loaded = true,
-    path = "/Users/arifwidianto/.local/share/nvim/site/pack/packer/start/indent-blankline.nvim",
-    url = "https://github.com/lukas-reineke/indent-blankline.nvim"
-  },
   ["lspkind-nvim"] = {
     loaded = true,
     path = "/Users/arifwidianto/.local/share/nvim/site/pack/packer/start/lspkind-nvim",
@@ -241,6 +236,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/arifwidianto/.local/share/nvim/site/pack/packer/start/tokyonight.nvim",
     url = "https://github.com/folke/tokyonight.nvim"
+  },
+  ["typescript.nvim"] = {
+    loaded = true,
+    path = "/Users/arifwidianto/.local/share/nvim/site/pack/packer/start/typescript.nvim",
+    url = "https://github.com/jose-elias-alvarez/typescript.nvim"
   },
   ["vim-maximizer"] = {
     loaded = true,
