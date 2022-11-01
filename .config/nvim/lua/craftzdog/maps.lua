@@ -5,6 +5,12 @@ local keymap = vim.keymap
 
 keymap.set('n', 'x', '"_x')
 
+-- Buffer
+keymap.set("n", "<C-i>", ":b#<CR>") -- Enable move to next buffer with lowercase `i`
+keymap.set("i", "<C-i>", "<Esc>:b#<CR>") -- Enable move to next buffer with lowercase `i`
+keymap.set("v", "<C-i>", "<Esc>:b#<CR>") -- Enable move to next buffer with lowercase `i`
+keymap.set("x", "<C-i>", "<Esc>:b#<CR>") -- Enable move to next buffer with lowercase `i`
+
 -- Increment/decrement
 keymap.set('n', '+', '<C-a>')
 keymap.set('n', '-', '<C-x>')
@@ -33,8 +39,12 @@ keymap.set('n', '<leader>sx', ':close<CR>')
 keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle split window maximization
 
 -- Open Explorer
-keymap.set('n', '<leader>e', ':E<CR>')
-keymap.set('n', '<leader>E', ':E<CR>')
+-- keymap.set('n', '<leader>e', ':E<CR>')
+-- keymap.set('n', '<leader>E', ':E<CR>')
+
+-- Nvim Tree Shortcuts
+keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>") -- toggle file explorer
+keymap.set("n", "<leader>E", ":NvimTreeToggle<CR>") -- toggle file explorer
 
 -- Move window
 keymap.set('n', '<Space>', '<C-w>w')
@@ -54,7 +64,6 @@ keymap.set('n', '<C-w><down>', '<C-w>-')
 keymap.set("i", "jk", "<ESC>", opts)
 keymap.set("i", "kj", "<ESC>", opts)
 
-
 -- Resize with arrows
 keymap.set("n", "<C-Up>", ":resize -2<CR>", opts)
 keymap.set("n", "<C-Down>", ":resize +2<CR>", opts)
@@ -73,10 +82,10 @@ keymap.set("i", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
 keymap.set("i", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 
 -- Save File
-keymap.set("n", "<C-s>", ":w<CR><ESC>")
-keymap.set("i", "<C-s>", "<ESC>:w<CR>a<ESC>")
-keymap.set("n", "<Cmd-s>", ":w:<CR>")
-keymap.set("i", "<Cmd-s>", "<ESC>:w<C")
+keymap.set("n", "<C-s>", ":w!<CR><ESC><CR>")
+keymap.set("i", "<C-s>", "<ESC>:w!<CR>a<ESC><CR>")
+keymap.set("n", "<Cmd-s>", ":w!<CR><ESC><CR>")
+keymap.set("i", "<Cmd-s>", "<ESC>:w!<CR><ESC><CR>")
 
 -- Copy all
 keymap.set("i", "<C-c>", "<cmd> %y+ <CR>")
@@ -88,16 +97,25 @@ keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>") -- find string u
 keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>") -- list open buffers in current neovim instance
 keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>") -- list available help tags
 
+keymap.set("n", "<leader>FF", "<cmd>Telescope find_files<cr>") -- find files within current working directory, respects .gitignore
+keymap.set("n", "<leader>FS", "<cmd>Telescope live_grep<cr>") -- find string in current working directory as you type
+keymap.set("n", "<leader>FC", "<cmd>Telescope grep_string<cr>") -- find string under cursor in current working directory
+keymap.set("n", "<leader>FB", "<cmd>Telescope buffers<cr>") -- list open buffers in current neovim instance
+keymap.set("n", "<leader>FH", "<cmd>Telescope help_tags<cr>") -- list available help tags
+
+
 -- telescope git commands (not on youtube nvim video)
 keymap.set("n", "<leader>gc", "<cmd>Telescope git_commits<cr>") -- list all git commits (use <cr> to checkout) ["gc" for git commits]
 keymap.set("n", "<leader>gfc", "<cmd>Telescope git_bcommits<cr>") -- list git commits for current file/buffer (use <cr> to checkout) ["gfc" for git file commits]
 keymap.set("n", "<leader>gb", "<cmd>Telescope git_branches<cr>") -- list git branches (use <cr> to checkout) ["gb" for git branch]
 keymap.set("n", "<leader>gs", "<cmd>Telescope git_status<cr>") -- list current changes per file with diff preview ["gs" for git status]
+
 keymap.set("n", "<leader>rh", function() return function()
     require("gitsigns").reset_hunk()
   end
 end
 )
+
 keymap.set("n", "<leader>ph", function() return function()
     require("gitsigns").preview_hunk()
   end

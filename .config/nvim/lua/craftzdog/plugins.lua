@@ -70,10 +70,10 @@ packer.startup(function(use)
   use 'hrsh7th/cmp-nvim-lsp' -- nvim-cmp source for neovim's built-in LSP
   use 'hrsh7th/nvim-cmp' -- Completion
   use 'williamboman/nvim-lsp-installer' -- LSP Installer
-  use 'neovim/nvim-lspconfig' -- LSP
   use 'jose-elias-alvarez/null-ls.nvim' -- Use Neovim as a language server to inject LSP diagnostics, code actions, and more via Lua
   use 'williamboman/mason.nvim'
   use 'williamboman/mason-lspconfig.nvim'
+  use 'neovim/nvim-lspconfig' -- LSP
   use("szw/vim-maximizer") -- maximizes and restores current window
   use("christoomey/vim-tmux-navigator") -- tmux & split window navigation
 
@@ -88,13 +88,21 @@ packer.startup(function(use)
     'nvim-treesitter/nvim-treesitter',
     run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
   }
-  use 'kyazdani42/nvim-web-devicons' -- File icons
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   use 'nvim-telescope/telescope.nvim'
-  use 'nvim-telescope/telescope-file-browser.nvim'
+  -- use 'nvim-telescope/telescope-file-browser.nvim'
   -- auto closing
   use("windwp/nvim-autopairs") -- autoclose parens, brackets, quotes, etc...
   use({ "windwp/nvim-ts-autotag", after = "nvim-treesitter" }) -- autoclose tags
+
+
+  use 'nvim-tree/nvim-web-devicons' -- Dev Icons for nvim-tree
+  use {
+    'nvim-tree/nvim-tree.lua',
+    requires = {
+      'nvim-tree/nvim-web-devicons', -- optional, for file icons
+    },
+  }
 
   -- git integration
   use "lewis6991/gitsigns.nvim" -- show line modifications on left hand side
@@ -106,12 +114,7 @@ packer.startup(function(use)
     run = function() vim.fn["mkdp#util#install"]() end,
   })
   use 'akinsho/nvim-bufferline.lua'
-  use {
-    'numToStr/Comment.nvim',
-    config = function()
-      require('Comment').setup()
-    end
-  }
+
   use 'jose-elias-alvarez/typescript.nvim' -- Typescript
   -- use 'github/copilot.vim'
 
@@ -119,6 +122,16 @@ packer.startup(function(use)
   use 'folke/tokyonight.nvim' -- Tokyonight theme
   use 'JoosepAlviste/nvim-ts-context-commentstring'
   use "Djancyp/better-comments.nvim" -- Better Comment
+  use 'mg979/vim-visual-multi'
+
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end
+  }
+  use "rafamadriz/friendly-snippets"
+  use 'ggandor/leap.nvim' -- Leap
 
   if packer_bootstrap then
     require("packer").sync({
@@ -262,6 +275,28 @@ packer.startup(function(use)
       },
     })
 
-  end
+    -- Setup icon for nvim-tree
+    require 'nvim-web-devicons'.setup({
+      -- your personnal icons can go here (to override)
+      -- you can specify color or cterm_color instead of specifying both of them
+      -- DevIcon will be appended to `name`
+      override = {
+        zsh = {
+          icon = "",
+          color = "#428850",
+          cterm_color = "65",
+          name = "Zsh"
+        }
+      };
+      -- globally enable different highlight colors per icon (default to true)
+      -- if set to false all icons will have the default icon's color
+      color_icons = true;
+      -- globally enable default icons (default to false)
+      -- will get overriden by `get_icons` option
+      default = true;
+    })
 
+    require('leap').add_default_mappings()
+
+  end
 end)
